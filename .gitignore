@@ -1,0 +1,44 @@
+/target/
+# Maven target directory
+/target/
+/**/target/
+
+# IDE files
+# IntelliJ IDEA
+/.idea/
+/*.iml
+/out/
+/*.ipr
+/*.iws
+
+# Eclipse
+/.classpath
+/.project
+/.settings/
+/bin/
+
+# NetBeans
+/nbproject/private/
+/build/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Maven Wrapper
+/.mvn/wrapper/maven-wrapper.jar
+
+# Dependency directories (optional, usually managed by Maven)
+/node_modules/   # if using Node for frontend
