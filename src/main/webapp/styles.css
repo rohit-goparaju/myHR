@@ -22,10 +22,9 @@ footer{
 }
 
 #welcome-container{
-	border: 1px solid red;
 	position: absolute;
 	top: 20%;
-	width: 60%;
+	width: 55%;
 	height: 32.5vw;
 	z-index: -1;
 }
@@ -54,7 +53,7 @@ footer{
 	position: absolute;
 	right: 5%;
 	top: 25%;
-	width: 25%;
+	width: 35%;
 	display: none;
 }
 
@@ -80,22 +79,14 @@ nav{
 
 
 @media only screen and (max-width: 600px){
-	#welcome-container{
-	position: absolute;
-	top: 20%;
-	width: 95%;
-	height: 60vw;
-	z-index: -1;
-}
 
 :root{
-	--hr-portal-text-size: 13vw;
+	--hr-portal-text-size: 11vw;
 	--hr-portal-div-height: calc(var(--hr-portal-text-size) * 1.55);
 }
-
 }
 
-@media only screen and (max-width: 1200px){
+@media only screen and (max-width: 900px){
 	#contents{
 		display: flex;
 		flex-direction: column;
