@@ -1,0 +1,119 @@
+@charset "UTF-8";
+
+*{
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+}
+
+:root{
+	--hr-portal-text-size: 7vw;
+	--hr-portal-div-height: calc(var(--hr-portal-text-size) * 1.55);
+}
+
+.special-elite-font{
+	font-family: 'Special Elite', Courier, monospace;
+	font-size: var(--hr-portal-text-size);
+}
+
+footer{
+	position: fixed;
+	bottom: 0;
+}
+
+#welcome-container{
+	border: 1px solid red;
+	position: absolute;
+	top: 20%;
+	width: 60%;
+	height: 32.5vw;
+	z-index: -1;
+}
+
+.hr-portal-text{
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+	height: var(--hr-portal-div-height);
+	animation: typing 1.5s linear;
+	animation-fill-mode: both;
+}
+
+#hr-portal-text2{
+	animation-delay: 1s;
+}
+
+#hr-portal-text3{
+	animation-delay: 1.5s;
+	animation-duration: 0.8s;
+}
+
+
+
+#login-container{
+	position: absolute;
+	right: 5%;
+	top: 25%;
+	width: 25%;
+	display: none;
+}
+
+#logo{
+	font-family: 'Special Elite', Courier, monospace;
+	font-size: 1.3em;
+}
+
+nav{
+	font-size: 1.2em;
+}
+
+@keyframes typing{
+	0%{
+		width: 0;
+	}
+	100%{
+		width: 100%;
+	}
+}
+
+
+
+
+@media only screen and (max-width: 600px){
+	#welcome-container{
+	position: absolute;
+	top: 20%;
+	width: 95%;
+	height: 60vw;
+	z-index: -1;
+}
+
+:root{
+	--hr-portal-text-size: 13vw;
+	--hr-portal-div-height: calc(var(--hr-portal-text-size) * 1.55);
+}
+
+}
+
+@media only screen and (max-width: 1200px){
+	#contents{
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		margin-bottom: 5vh;
+	}
+	#welcome-container{
+	position: relative;
+	top: unset;
+	width: 95%;
+	height: 60vw;
+	z-index: -1;
+}
+#login-container{
+	position: relative;
+	right: unset;
+	top: unset;
+	width: 95%;
+}
+}
