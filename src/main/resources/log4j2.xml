@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration xmlns="http://logging.apache.org/log4j/2.0/config" status="warn">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%highlight{[%level]}%style{[%d{DATE}]}{blue}[%style{ %location }{blue}] - %m%n" disableAnsi="false"/>
+    </Console>
+ 	<RollingFile name="DailyRollingFile" fileName="${sys:catalina.base}/logs/myHR/myHR.log" filePattern="${sys:catalina.base}/logs/myHR/%d{dd-MM-yyyy}-myHR.log">
+		<PatternLayout pattern="[%level][%d{DATE}][ %location ] - %m%n"/>
+		<Policies>
+			<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+		</Policies>
+		
+		<DefaultRolloverStrategy max="30"/>
+ 	
+ 	</RollingFile>
+  </Appenders>
+  <Loggers>
+    <Root level="all">
+      <AppenderRef ref="Console"/>
+    </Root>
+    <Logger name="DailyRollingFileLogger" level="all" additivity="true">
+	    <AppenderRef ref="DailyRollingFile"/>
+    </Logger>
+  </Loggers>
+</Configuration>
