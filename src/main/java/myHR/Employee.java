@@ -1,15 +1,25 @@
 package myHR;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Employee {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long empId;
 	private String empFname;
 	private String empLname;
+	@Enumerated(EnumType.STRING)
 	private ClearenceLevel clearanceLevel;
 	
 	public Employee() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Employee(String empFname, String empLname, ClearenceLevel clearanceLevel) {
