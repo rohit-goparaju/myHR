@@ -66,6 +66,12 @@ nav{
 	font-size: 1.2em;
 }
 
+
+#navText{
+	font-family: 'Special Elite', Courier, monospace;
+}
+
+
 @keyframes typing{
 	0%{
 		width: 0;
