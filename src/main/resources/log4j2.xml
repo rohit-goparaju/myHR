@@ -15,10 +15,10 @@
  	</RollingFile>
   </Appenders>
   <Loggers>
-    <Root level="all">
+    <Root level="info">
       <AppenderRef ref="Console"/>
     </Root>
-    <Logger name="DailyRollingFileLogger" level="all" additivity="true">
+    <Logger name="DailyRollingFileLogger" level="info" additivity="true">
 	    <AppenderRef ref="DailyRollingFile"/>
     </Logger>
   </Loggers>
