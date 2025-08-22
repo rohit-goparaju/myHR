@@ -1,5 +1,6 @@
 package myHR;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -7,6 +8,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+/**
+ * 
+ */
 @Entity
 public class Employee {
 	
@@ -17,17 +21,26 @@ public class Employee {
 	private String empLname;
 	@Enumerated(EnumType.STRING)
 	private ClearenceLevel clearanceLevel;
+	@Column(unique = true, nullable = false)
+	private String empEmail;
+	@Column(nullable = false)
+	private String empPassword;
 	
 	public Employee() {
 		super();
 	}
 	
-	public Employee(String empFname, String empLname, ClearenceLevel clearanceLevel) {
+
+	public Employee(String empFname, String empLname, ClearenceLevel clearanceLevel, String empEmail,
+			String empPassword) {
 		super();
-		this.empFname = empFname;
-		this.empLname = empLname;
-		this.clearanceLevel = clearanceLevel;
+		this.setEmpFname(empFname);
+		this.setEmpLname(empLname);
+		this.setClearanceLevel(clearanceLevel);
+		this.setEmpEmail(empEmail);
+		this.setEmpPassword(empPassword);
 	}
+
 
 	public long getEmpId() {
 		return empId;
@@ -42,7 +55,7 @@ public class Employee {
 	}
 
 	public void setEmpFname(String empFname) {
-		this.empFname = empFname;
+		this.empFname = empFname.toLowerCase();
 	}
 
 	public String getEmpLname() {
@@ -50,7 +63,7 @@ public class Employee {
 	}
 
 	public void setEmpLname(String empLname) {
-		this.empLname = empLname;
+		this.empLname = empLname.toLowerCase();
 	}
 
 	public ClearenceLevel getClearanceLevel() {
@@ -60,12 +73,30 @@ public class Employee {
 	public void setClearanceLevel(ClearenceLevel clearanceLevel) {
 		this.clearanceLevel = clearanceLevel;
 	}
+	
+	public String getEmpEmail() {
+		return empEmail;
+	}
+
+	public void setEmpEmail(String empEmail) {
+		this.empEmail = empEmail;
+	}
+	
+	
+	public String getEmpPassword() {
+		return empPassword;
+	}
+
+
+	public void setEmpPassword(String empPassword) {
+		this.empPassword = empPassword;
+	}
+
 
 	@Override
 	public String toString() {
 		return "Employee [empId=" + empId + ", empFname=" + empFname + ", empLname=" + empLname + ", clearanceLevel="
-				+ clearanceLevel + "]";
+				+ clearanceLevel + ", empEmail=" + empEmail + "]";
 	}
-	
-	
+
 }
