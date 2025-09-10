@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projects.myHR.dto.MyHRUserLoginRequestDTO;
+import com.projects.myHR.dto.MyHRUserLoginResponseDTO;
 import com.projects.myHR.enums.MyHRValidity;
 import com.projects.myHR.service.MyHRUserService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/")
@@ -23,11 +26,11 @@ public class HomeController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody MyHRUserLoginRequestDTO user) {
-		String jwtToken = userService.validate(user);
-		if(jwtToken.equals(MyHRValidity.INVALID.name())) {
+	public ResponseEntity<MyHRUserLoginResponseDTO> login(@Valid @RequestBody MyHRUserLoginRequestDTO user) {
+		MyHRUserLoginResponseDTO loginResponseDTO = userService.validate(user);
+		if(loginResponseDTO.getJwt().equals(MyHRValidity.INVALID.name())) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 		}
-		return ResponseEntity.ok(jwtToken);
+		return ResponseEntity.ok(loginResponseDTO);
 	}
 }

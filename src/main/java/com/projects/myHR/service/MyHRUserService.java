@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.projects.myHR.dto.MyHRUserLoginRequestDTO;
+import com.projects.myHR.dto.MyHRUserLoginResponseDTO;
 import com.projects.myHR.dto.MyHRUserRequestDTO;
 import com.projects.myHR.dto.MyHRUserResponseDTO;
 import com.projects.myHR.enums.MyHRRoles;
@@ -74,9 +75,16 @@ public class MyHRUserService {
 		return convertToResponseDTOList(repo.findByRole(MyHRRoles.EMPLOYEE));	
 	}
 
-	public String validate(MyHRUserLoginRequestDTO user) {
+	public MyHRUserLoginResponseDTO validate(MyHRUserLoginRequestDTO user) {
 		Authentication auth= authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-		return auth.isAuthenticated() ? jwtService.generateToken(user.getUsername()): MyHRValidity.INVALID.name();
+		MyHRUserLoginResponseDTO loginResponseDTO = new MyHRUserLoginResponseDTO();
+		if(auth.isAuthenticated()) {
+			MyHRUser repoUser = repo.findByUsername(user.getUsername());
+			MyHRUserResponseDTO userResponseDTO = new MyHRUserResponseDTO(repoUser.getUsername(), repoUser.getRole());
+			loginResponseDTO.setUser(userResponseDTO);
+			loginResponseDTO.setJwt(jwtService.generateToken(user.getUsername()));
+		}
+		return loginResponseDTO;
 	}
 	
 }
