@@ -15,7 +15,7 @@ import io.jsonwebtoken.security.Keys;
 public class JWTService {
 
 	private final SecretKey key;
-	private long expiration = 1 * 60 *  60 * 1000;
+	private long expiration =  1 * 60 * 60 * 1000;
 	
 	public JWTService(@Value("${jwt.secret}") String sKey) {
 		this.key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(sKey));
@@ -31,12 +31,16 @@ public class JWTService {
 	}
 	
 	public String extractUsername(String token) {
-		return Jwts.parser()
-				.verifyWith(key)
-				.build()
-				.parseSignedClaims(token)
-				.getPayload()
-				.getSubject();
+		try {			
+			return Jwts.parser()
+					.verifyWith(key)
+					.build()
+					.parseSignedClaims(token)
+					.getPayload()
+					.getSubject();
+		}catch(Exception e) {
+			return null;
+		}
 	}
 	
 	public boolean validate(String token) {

@@ -9,6 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import io.jsonwebtoken.ExpiredJwtException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 	
@@ -30,5 +32,16 @@ public class GlobalExceptionHandler {
 		error.put("message", ex.getMessage());
 		
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+	}
+	
+	@ExceptionHandler(ExpiredJwtException.class)
+	public ResponseEntity<Map<String, String>> handleJwtExpiredException(ExpiredJwtException ex){
+		
+		Map<String, String> error = new HashMap<>();
+		
+		error.put("error", "JWT expired");
+		error.put("message", ex.getMessage());
+		
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
 	}
 }
