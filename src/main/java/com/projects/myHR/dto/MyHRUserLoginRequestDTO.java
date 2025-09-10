@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Pattern;
 
 public class MyHRUserLoginRequestDTO {
 	@NotNull
-	@Pattern(regexp="^([a-z]{1}[a-z0-9]{1,})(@myHR.in)$", message = "username must contain only lowercase alphabets, must start with an alphabet, can contain numbers and must end with @myHR.in" )
+	@Pattern(regexp="^([a-z]{1}[a-z0-9]{1,})(@myHR\\.in)$", message = "username must contain only lowercase alphabets, must start with an alphabet, can contain numbers and must end with @myHR.in" )
 	private String username;
 	@NotNull
 	@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*@)(?=.*\\d+)[a-zA-Z][a-zA-Z0-9@]{5,}$", message="should be atleast 6 characters long, should contain atleast \"one lower case, one upper case, one digit and one @\"")
@@ -17,7 +17,7 @@ public class MyHRUserLoginRequestDTO {
 
 
 	public MyHRUserLoginRequestDTO(
-			@NotNull @Pattern(regexp = "^([a-z]{1}[a-z0-9]{1,})(@myHR.in)$", message = "username must contain only lowercase alphabets, must start with an alphabet, can contain numbers and must end with @myHR.in") String username,
+			@NotNull @Pattern(regexp = "^([a-z]{1}[a-z0-9]{1,})(@myHR\\.in)$", message = "username must contain only lowercase alphabets, must start with an alphabet, can contain numbers and must end with @myHR.in") String username,
 			@NotNull @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*@)(?=.*\\d+)[a-zA-Z][a-zA-Z0-9@]{5,}$", message = "should be atleast 6 characters long, should contain atleast \"one lower case, one upper case, one digit and one @\"") String password) {
 		super();
 		this.username = username;
