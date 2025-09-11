@@ -1,5 +1,7 @@
 package com.projects.myHR.model;
 
+import java.util.Arrays;
+
 import com.projects.myHR.enums.MyHRRoles;
 
 import jakarta.persistence.Column;
@@ -10,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class MyHRUser {
@@ -31,18 +34,27 @@ public class MyHRUser {
 	@Column(nullable=false)
 	private byte[] profilePicture;
 
+	@NotNull
+	private String securityQuestion;
+
+	@NotNull
+	private String securityAnswer;
+	
 	public MyHRUser() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public MyHRUser(long id, String username, String password, MyHRRoles role, byte[] profilePicture) {
+	public MyHRUser(long id, String username, String password, MyHRRoles role, byte[] profilePicture,
+			@NotNull String securityQuestion, @NotNull String securityAnswer) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.role = role;
 		this.profilePicture = profilePicture;
+		this.securityQuestion = securityQuestion;
+		this.securityAnswer = securityAnswer;
 	}
 
 	public long getId() {
@@ -76,7 +88,7 @@ public class MyHRUser {
 	public void setRole(MyHRRoles role) {
 		this.role = role;
 	}
-	
+
 	public byte[] getProfilePicture() {
 		return profilePicture;
 	}
@@ -85,9 +97,27 @@ public class MyHRUser {
 		this.profilePicture = profilePicture;
 	}
 
+	public String getSecurityQuestion() {
+		return securityQuestion;
+	}
+
+	public void setSecurityQuestion(String securityQuestion) {
+		this.securityQuestion = securityQuestion;
+	}
+
+	public String getSecurityAnswer() {
+		return securityAnswer;
+	}
+
+	public void setSecurityAnswer(String securityAnswer) {
+		this.securityAnswer = securityAnswer;
+	}
+
 	@Override
 	public String toString() {
-		return "MyHRUser [id=" + id + ", username=" + username + ", password=" + password + ", role=" + role + "]";
+		return "MyHRUser [id=" + id + ", username=" + username + ", password=" + password + ", role=" + role
+				+ ", profilePicture=" + Arrays.toString(profilePicture) + ", securityQuestion=" + securityQuestion
+				+ ", securityAnswer=" + securityAnswer + "]";
 	}
-	
+
 }

@@ -18,6 +18,9 @@ import com.projects.myHR.dto.MyHRUserLoginRequestDTO;
 import com.projects.myHR.dto.MyHRUserLoginResponseDTO;
 import com.projects.myHR.dto.MyHRUserRequestDTO;
 import com.projects.myHR.dto.MyHRUserResponseDTO;
+import com.projects.myHR.dto.ResetPasswordRequestDTO;
+import com.projects.myHR.dto.SecurityQuestionRequestDTO;
+import com.projects.myHR.dto.SecurityQuestionResponseDTO;
 import com.projects.myHR.enums.MyHRRequestStatus;
 import com.projects.myHR.enums.MyHRRoles;
 import com.projects.myHR.model.MyHRUser;
@@ -30,7 +33,7 @@ public class MyHRUserService {
 	private PasswordEncoder encoder;
 	private AuthenticationManager authManager;
 	private JWTService jwtService;
-	
+
 	public MyHRUserService(MyHRUserRepo repo, PasswordEncoder encoder, AuthenticationManager authManager,
 			JWTService jwtService) {
 		super();
@@ -47,7 +50,9 @@ public class MyHRUserService {
 			user.setPassword(encoder.encode(userReqDTO.getPassword()));
 			user.setRole(userReqDTO.getRole());
 			user.setProfilePicture(profilePicture.getBytes());
-			
+			user.setSecurityQuestion(userReqDTO.getSecurityQuestion().trim());
+			user.setSecurityAnswer(userReqDTO.getSecurityAnswer().trim().toLowerCase());
+
 			MyHRUser savedUser = repo.save(user);
 
 			MyHRUserResponseDTO userResponseDTO = new MyHRUserResponseDTO(savedUser.getUsername(), savedUser.getRole());
@@ -57,14 +62,14 @@ public class MyHRUserService {
 			return Optional.empty();
 		}
 	}
-	
+
 	private List<MyHRUserResponseDTO> convertToResponseDTOList(List<MyHRUser> hrUserList){
 		List<MyHRUserResponseDTO> userResponseList = new ArrayList<>();
 
 		if(hrUserList != null && !hrUserList.isEmpty()) {
 			userResponseList = hrUserList.stream().map(user->new MyHRUserResponseDTO(user.getUsername(), user.getRole())).toList();
 		}
-		
+
 		return userResponseList;
 	}
 
@@ -91,11 +96,11 @@ public class MyHRUserService {
 		}
 		return loginResponseDTO;
 	}
-	
+
 	public MyHRUser findByUsername(String username) {
 		return repo.findByUsername(username);
 	}
-	
+
 	public byte[] getProfilePicture(String username) {
 		MyHRUser user = repo.findByUsername(username);
 		if(user != null)
@@ -103,14 +108,16 @@ public class MyHRUserService {
 		else
 			return null;
 	}
-	
+
 	public MyHRRequestStatus changePassword(ChangePasswordRequestDTO changePasswordRequestDTO) {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		if(username != null ) {
 			MyHRUser user = repo.findByUsername(username);
 			if(user != null) {
-				user.setPassword(encoder.encode(changePasswordRequestDTO.getNewPassword()));
-				repo.save(user);
+				if(!encoder.matches(changePasswordRequestDTO.getNewPassword(), user.getPassword())) {
+					user.setPassword(encoder.encode(changePasswordRequestDTO.getNewPassword()));
+					repo.save(user);					
+				}
 				return MyHRRequestStatus.SUCCESS;
 			}else {
 				return MyHRRequestStatus.FAILED;
@@ -118,5 +125,29 @@ public class MyHRUserService {
 		}
 		return MyHRRequestStatus.FAILED;
 	}
-	
+
+	public SecurityQuestionResponseDTO getSecurityQuestion(SecurityQuestionRequestDTO securityQuestionRequestDTO) {
+		MyHRUser user = repo.findByUsername(securityQuestionRequestDTO.getUsername());
+		if(user!=null) {
+			return  new SecurityQuestionResponseDTO(user.getSecurityQuestion(), user.getSecurityAnswer());
+		}
+		return null;
+	}
+
+	public MyHRRequestStatus resetPassword(ResetPasswordRequestDTO resetPasswordRequestDTO) {
+		MyHRUser user = repo.findByUsername(resetPasswordRequestDTO.getUsername());
+		if(user != null && user.getSecurityAnswer().equalsIgnoreCase(resetPasswordRequestDTO.getSecurityAnswer())) {
+			if(!encoder.matches(resetPasswordRequestDTO.getPassword(), user.getPassword())) {
+				user.setPassword(encoder.encode(resetPasswordRequestDTO.getPassword()));
+				repo.save(user);				
+			}
+			return MyHRRequestStatus.SUCCESS;
+		}
+		else {			
+			return MyHRRequestStatus.FAILED;
+		}
+	}
+
+
+
 }

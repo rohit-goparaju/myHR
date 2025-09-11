@@ -1,40 +1,31 @@
 package com.projects.myHR.dto;
 
-import com.projects.myHR.enums.MyHRRoles;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-public class MyHRUserRequestDTO {
-	
+public class ResetPasswordRequestDTO {
 	@NotNull
 	@Pattern(regexp="^([a-z]{1}[a-z0-9]{1,})(@myHR\\.in)$", message = "username must contain only lowercase alphabets, must start with an alphabet, can contain numbers and must end with @myHR.in" )
 	private String username;
 	@NotNull
 	@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*@)(?=.*\\d+)[a-zA-Z][a-zA-Z0-9@]{5,}$", message="should be atleast 6 characters long, should contain atleast \"one lower case, one upper case, one digit and one @\"")
 	private String password;
-	@NotNull
-	private MyHRRoles role = MyHRRoles.EMPLOYEE;
 	
-	@NotNull
-	private String securityQuestion;
-
 	@NotNull
 	private String securityAnswer;
-	
-	public MyHRUserRequestDTO() {
+
+	public ResetPasswordRequestDTO() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	public MyHRUserRequestDTO(
+	public ResetPasswordRequestDTO(
 			@NotNull @Pattern(regexp = "^([a-z]{1}[a-z0-9]{1,})(@myHR\\.in)$", message = "username must contain only lowercase alphabets, must start with an alphabet, can contain numbers and must end with @myHR.in") String username,
 			@NotNull @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*@)(?=.*\\d+)[a-zA-Z][a-zA-Z0-9@]{5,}$", message = "should be atleast 6 characters long, should contain atleast \"one lower case, one upper case, one digit and one @\"") String password,
-			@NotNull MyHRRoles role, @NotNull String securityQuestion, @NotNull String securityAnswer) {
+			@NotNull String securityAnswer) {
 		super();
 		this.username = username;
 		this.password = password;
-		this.role = role;
-		this.securityQuestion = securityQuestion;
 		this.securityAnswer = securityAnswer;
 	}
 
@@ -54,22 +45,6 @@ public class MyHRUserRequestDTO {
 		this.password = password;
 	}
 
-	public MyHRRoles getRole() {
-		return role;
-	}
-
-	public void setRole(MyHRRoles role) {
-		this.role = role;
-	}
-
-	public String getSecurityQuestion() {
-		return securityQuestion;
-	}
-
-	public void setSecurityQuestion(String securityQuestion) {
-		this.securityQuestion = securityQuestion;
-	}
-
 	public String getSecurityAnswer() {
 		return securityAnswer;
 	}
@@ -80,10 +55,8 @@ public class MyHRUserRequestDTO {
 
 	@Override
 	public String toString() {
-		return "MyHRUserRequestDTO [username=" + username + ", password=" + password + ", role=" + role
-				+ ", securityQuestion=" + securityQuestion + ", securityAnswer=" + securityAnswer + "]";
+		return "ResetPasswordRequestDTO [username=" + username + ", password=" + password + ", securityAnswer="
+				+ securityAnswer + "]";
 	}
 
-	
-		
 }
