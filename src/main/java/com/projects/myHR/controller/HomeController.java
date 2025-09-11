@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.projects.myHR.dto.ChangePasswordRequestDTO;
 import com.projects.myHR.dto.MyHRUserLoginRequestDTO;
 import com.projects.myHR.dto.MyHRUserLoginResponseDTO;
+import com.projects.myHR.enums.MyHRRequestStatus;
 import com.projects.myHR.enums.MyHRValidity;
 import com.projects.myHR.service.MyHRUserService;
 
@@ -43,6 +45,17 @@ public class HomeController {
 			return ResponseEntity.ok(profilePicture);
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		}
+	}
+	
+	@PostMapping("/changePassword")
+	public ResponseEntity<MyHRRequestStatus> changePassword(@Valid @RequestBody ChangePasswordRequestDTO changePasswordRequestDTO){
+		MyHRRequestStatus requestStaus = userService.changePassword(changePasswordRequestDTO);
+		
+		if(requestStaus == MyHRRequestStatus.SUCCESS) {
+			return ResponseEntity.ok(requestStaus);
+		}else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(requestStaus);
 		}
 	}
 }

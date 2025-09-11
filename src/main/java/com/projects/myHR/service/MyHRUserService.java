@@ -8,14 +8,17 @@ import java.util.Optional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.projects.myHR.dto.ChangePasswordRequestDTO;
 import com.projects.myHR.dto.MyHRUserLoginRequestDTO;
 import com.projects.myHR.dto.MyHRUserLoginResponseDTO;
 import com.projects.myHR.dto.MyHRUserRequestDTO;
 import com.projects.myHR.dto.MyHRUserResponseDTO;
+import com.projects.myHR.enums.MyHRRequestStatus;
 import com.projects.myHR.enums.MyHRRoles;
 import com.projects.myHR.model.MyHRUser;
 import com.projects.myHR.repo.MyHRUserRepo;
@@ -99,6 +102,21 @@ public class MyHRUserService {
 			return user.getProfilePicture();
 		else
 			return null;
+	}
+	
+	public MyHRRequestStatus changePassword(ChangePasswordRequestDTO changePasswordRequestDTO) {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		if(username != null ) {
+			MyHRUser user = repo.findByUsername(username);
+			if(user != null) {
+				user.setPassword(encoder.encode(changePasswordRequestDTO.getNewPassword()));
+				repo.save(user);
+				return MyHRRequestStatus.SUCCESS;
+			}else {
+				return MyHRRequestStatus.FAILED;
+			}
+		}
+		return MyHRRequestStatus.FAILED;
 	}
 	
 }
