@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 
 @Entity
 public class MyHRUser {
@@ -25,18 +26,23 @@ public class MyHRUser {
 	
 	@Enumerated(EnumType.STRING)
 	private MyHRRoles role = MyHRRoles.EMPLOYEE;
+	
+	@Lob
+	@Column(nullable=false)
+	private byte[] profilePicture;
 
 	public MyHRUser() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public MyHRUser(long id, String username, String password, MyHRRoles role) {
+	public MyHRUser(long id, String username, String password, MyHRRoles role, byte[] profilePicture) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.role = role;
+		this.profilePicture = profilePicture;
 	}
 
 	public long getId() {
@@ -69,6 +75,14 @@ public class MyHRUser {
 
 	public void setRole(MyHRRoles role) {
 		this.role = role;
+	}
+	
+	public byte[] getProfilePicture() {
+		return profilePicture;
+	}
+
+	public void setProfilePicture(byte[] profilePicture) {
+		this.profilePicture = profilePicture;
 	}
 
 	@Override

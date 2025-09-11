@@ -1,5 +1,6 @@
 package com.projects.myHR.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -9,13 +10,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.projects.myHR.dto.MyHRUserLoginRequestDTO;
 import com.projects.myHR.dto.MyHRUserLoginResponseDTO;
 import com.projects.myHR.dto.MyHRUserRequestDTO;
 import com.projects.myHR.dto.MyHRUserResponseDTO;
 import com.projects.myHR.enums.MyHRRoles;
-import com.projects.myHR.enums.MyHRValidity;
 import com.projects.myHR.model.MyHRUser;
 import com.projects.myHR.repo.MyHRUserRepo;
 
@@ -36,13 +37,14 @@ public class MyHRUserService {
 		this.jwtService = jwtService;
 	}
 
-	public Optional<MyHRUserResponseDTO> addUser(MyHRUserRequestDTO userReqDTO) {
+	public Optional<MyHRUserResponseDTO> addUser(MyHRUserRequestDTO userReqDTO, MultipartFile profilePicture) throws IOException {
 		if(repo.findByUsername(userReqDTO.getUsername()) == null) {
 			MyHRUser user = new MyHRUser();
 			user.setUsername(userReqDTO.getUsername());
 			user.setPassword(encoder.encode(userReqDTO.getPassword()));
 			user.setRole(userReqDTO.getRole());
-
+			user.setProfilePicture(profilePicture.getBytes());
+			
 			MyHRUser savedUser = repo.save(user);
 
 			MyHRUserResponseDTO userResponseDTO = new MyHRUserResponseDTO(savedUser.getUsername(), savedUser.getRole());
@@ -85,6 +87,18 @@ public class MyHRUserService {
 			loginResponseDTO.setJwt(jwtService.generateToken(user.getUsername()));
 		}
 		return loginResponseDTO;
+	}
+	
+	public MyHRUser findByUsername(String username) {
+		return repo.findByUsername(username);
+	}
+	
+	public byte[] getProfilePicture(String username) {
+		MyHRUser user = repo.findByUsername(username);
+		if(user != null)
+			return user.getProfilePicture();
+		else
+			return null;
 	}
 	
 }

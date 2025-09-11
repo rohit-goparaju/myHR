@@ -6,16 +6,20 @@ public class MyHRUserResponseDTO {
 
 	private String username;
 	private MyHRRoles role = MyHRRoles.EMPLOYEE;
-
+ 
 	public MyHRUserResponseDTO() {
 		super();
 	}
+
+	
 
 	public MyHRUserResponseDTO(String username, MyHRRoles role) {
 		super();
 		this.username = username;
 		this.role = role;
 	}
+
+
 
 	public String getUsername() {
 		return username;
@@ -32,6 +36,7 @@ public class MyHRUserResponseDTO {
 	public void setRole(MyHRRoles role) {
 		this.role = role;
 	}
+	
 
 	@Override
 	public String toString() {

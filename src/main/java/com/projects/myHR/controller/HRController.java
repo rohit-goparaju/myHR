@@ -1,5 +1,6 @@
 package com.projects.myHR.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,9 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.projects.myHR.dto.MyHRUserRequestDTO;
 import com.projects.myHR.dto.MyHRUserResponseDTO;
@@ -32,9 +34,9 @@ public class HRController {
 	}
 
 	@PostMapping("/addUser")
-	public ResponseEntity<MyHRUserResponseDTO> addUser(@Valid @RequestBody MyHRUserRequestDTO userReqDTO){
+	public ResponseEntity<MyHRUserResponseDTO> addUser(@Valid @RequestPart("user") MyHRUserRequestDTO userReqDTO, @RequestPart("profilePicture") MultipartFile profilePicture) throws IOException{
 		if(userReqDTO.getRole() != MyHRRoles.ADMIN) {
-		Optional<MyHRUserResponseDTO> userResponseDTO = userService.addUser(userReqDTO);
+		Optional<MyHRUserResponseDTO> userResponseDTO = userService.addUser(userReqDTO, profilePicture);
 		if(userResponseDTO.isPresent())
 			return ResponseEntity.ok(userResponseDTO.get());
 		else

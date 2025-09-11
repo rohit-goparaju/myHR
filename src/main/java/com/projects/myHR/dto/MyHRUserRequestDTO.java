@@ -1,5 +1,7 @@
 package com.projects.myHR.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.projects.myHR.enums.MyHRRoles;
 
 import jakarta.validation.constraints.NotNull;
@@ -15,11 +17,11 @@ public class MyHRUserRequestDTO {
 	private String password;
 	@NotNull
 	private MyHRRoles role = MyHRRoles.EMPLOYEE;
+
 	
 	public MyHRUserRequestDTO() {
 		super();
 	}
-
 
 	public MyHRUserRequestDTO(
 			@NotNull @Pattern(regexp = "^([a-z]{1}[a-z0-9]{1,})(@myHR\\.in)$", message = "username must contain only lowercase alphabets, must start with an alphabet, can contain numbers and must end with @myHR.in") String username,
@@ -30,7 +32,6 @@ public class MyHRUserRequestDTO {
 		this.password = password;
 		this.role = role;
 	}
-
 
 	public String getUsername() {
 		return username;
@@ -60,7 +61,6 @@ public class MyHRUserRequestDTO {
 	public void setRole(MyHRRoles role) {
 		this.role = role;
 	}
-
 
 	@Override
 	public String toString() {
