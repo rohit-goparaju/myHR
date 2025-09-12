@@ -31,7 +31,7 @@ public class MyHRUser {
 	private MyHRRoles role = MyHRRoles.EMPLOYEE;
 	
 	@Lob
-	@Column(nullable=false)
+	@Column(nullable=false, columnDefinition = "LONGBLOB")
 	private byte[] profilePicture;
 
 	@NotNull
