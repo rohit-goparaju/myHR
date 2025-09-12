@@ -1,11 +1,11 @@
 package com.projects.myHR.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projects.myHR.dto.MyHRUserResponseDTO;
@@ -27,8 +27,8 @@ public class EmployeeController {
 
 
 	@GetMapping("/findAllUsers")
-	public ResponseEntity<List<MyHRUserResponseDTO>> findAllUsers(){
-		List<MyHRUserResponseDTO> userList = userService.findAllUsersForEmployee();
+	public ResponseEntity<Page<MyHRUserResponseDTO>> findAllUsers(@RequestParam(defaultValue = "0")int page, @RequestParam(defaultValue = "5") int size){
+		Page<MyHRUserResponseDTO> userList = userService.findAllUsersForEmployee(page, size);
 		return ResponseEntity.ok(userList);
 	}
 	

@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,8 +44,8 @@ public class AdminController {
 	}
 
 	@GetMapping("/findAllUsers")
-	public ResponseEntity<List<MyHRUserResponseDTO>> findAllUsers(){
-		List<MyHRUserResponseDTO> userList = userService.findAllUsers();
+	public ResponseEntity<Page<MyHRUserResponseDTO>> findAllUsers(@RequestParam(defaultValue = "0")int page, @RequestParam(defaultValue = "5") int size){
+		Page<MyHRUserResponseDTO> userList = userService.findAllUsers(page, size);
 		return ResponseEntity.ok(userList);
 	}
 	

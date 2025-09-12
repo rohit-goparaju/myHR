@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,6 +29,9 @@ import com.projects.myHR.enums.MyHRRoles;
 import com.projects.myHR.model.MyHRUser;
 import com.projects.myHR.repo.MyHRUserRepo;
 
+import jakarta.persistence.EntityManager;
+
+
 @Service
 public class MyHRUserService {
 
@@ -34,6 +39,9 @@ public class MyHRUserService {
 	private PasswordEncoder encoder;
 	private AuthenticationManager authManager;
 	private JWTService jwtService;
+	
+	@jakarta.persistence.PersistenceContext
+	private EntityManager entityManager;
 
 	public MyHRUserService(MyHRUserRepo repo, PasswordEncoder encoder, AuthenticationManager authManager,
 			JWTService jwtService) {
@@ -74,16 +82,19 @@ public class MyHRUserService {
 		return userResponseList;
 	}
 
-	public List<MyHRUserResponseDTO> findAllUsers() {
-		return convertToResponseDTOList(repo.findAll());
+	public Page<MyHRUserResponseDTO> findAllUsers(int page, int size) {
+		Page<MyHRUser> myHRUserPage = repo.findAll(PageRequest.of(page, size));
+		return myHRUserPage.map((user)->new MyHRUserResponseDTO(user.getUsername(), user.getRole()));
 	}
 
-	public List<MyHRUserResponseDTO> findAllUsersForHR() {
-		return convertToResponseDTOList(repo.findByRoleIn(List.of(MyHRRoles.HR, MyHRRoles.EMPLOYEE)));
+	public Page<MyHRUserResponseDTO> findAllUsersForHR(int page, int size) {
+		Page<MyHRUser> myHRUserPage = repo.findByRoleIn(List.of(MyHRRoles.HR, MyHRRoles.EMPLOYEE), PageRequest.of(page, size));
+		return myHRUserPage.map(user->new MyHRUserResponseDTO(user.getUsername(), user.getRole()));
 	}
 
-	public List<MyHRUserResponseDTO> findAllUsersForEmployee() {
-		return convertToResponseDTOList(repo.findByRole(MyHRRoles.EMPLOYEE));	
+	public Page<MyHRUserResponseDTO> findAllUsersForEmployee(int page, int size) {
+		Page<MyHRUser> myHRUserPage = repo.findByRole(MyHRRoles.EMPLOYEE, PageRequest.of(page, size));
+		return myHRUserPage.map(user->new MyHRUserResponseDTO(user.getUsername(), user.getRole()));
 	}
 
 	public MyHRUserLoginResponseDTO validate(MyHRUserLoginRequestDTO user) {
@@ -175,6 +186,11 @@ public class MyHRUserService {
 		}
 	}
 
-
-
+	public MyHRRequestStatus deleteEmployee(String username) {
+		MyHRUser user = repo.findByUsername(username);
+		if(user != null) {
+			repo.deleteById(user.getId());
+		}
+		return MyHRRequestStatus.SUCCESS;
+	}
 }
