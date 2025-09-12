@@ -24,6 +24,7 @@ import com.projects.myHR.dto.MyHRUserResponseDTO;
 import com.projects.myHR.dto.ResetPasswordRequestDTO;
 import com.projects.myHR.dto.SecurityQuestionRequestDTO;
 import com.projects.myHR.dto.SecurityQuestionResponseDTO;
+import com.projects.myHR.dto.UpdateRoleRequestDTO;
 import com.projects.myHR.enums.MyHRRequestStatus;
 import com.projects.myHR.enums.MyHRRoles;
 import com.projects.myHR.model.MyHRUser;
@@ -192,5 +193,17 @@ public class MyHRUserService {
 			repo.deleteById(user.getId());
 		}
 		return MyHRRequestStatus.SUCCESS;
+	}
+
+	public MyHRRequestStatus updateRole(UpdateRoleRequestDTO reqDTO) {
+		MyHRUser user = repo.findByUsername(reqDTO.getUsername());
+		if(user != null) {
+			if(user.getRole() != reqDTO.getRole()) {
+				user.setRole(reqDTO.getRole());
+				repo.save(user);
+			}
+			return MyHRRequestStatus.SUCCESS;
+		}
+		return MyHRRequestStatus.FAILED;
 	}
 }

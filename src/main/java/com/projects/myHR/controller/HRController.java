@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.projects.myHR.dto.MyHRUserRequestDTO;
 import com.projects.myHR.dto.MyHRUserResponseDTO;
+import com.projects.myHR.dto.UpdateRoleRequestDTO;
 import com.projects.myHR.enums.MyHRRequestStatus;
 import com.projects.myHR.enums.MyHRRoles;
 import com.projects.myHR.service.MyHRUserService;
@@ -59,5 +62,19 @@ public class HRController {
 	@DeleteMapping("/deleteUser/{username}")
 	public ResponseEntity<MyHRRequestStatus> deleteEmployee(@PathVariable(name = "username") String username){
 		return ResponseEntity.ok(userService.deleteEmployee(username));
+	}
+	
+	@PutMapping("/updateRole")
+	public ResponseEntity<MyHRRequestStatus> updateRole(@RequestBody UpdateRoleRequestDTO reqDTO){
+		if(reqDTO.getRole() != MyHRRoles.ADMIN) {			
+			MyHRRequestStatus reqStatus = userService.updateRole(reqDTO);
+			if(reqStatus == MyHRRequestStatus.SUCCESS) {
+				return ResponseEntity.ok(reqStatus);
+			}else {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(reqStatus);
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(MyHRRequestStatus.FAILED);
+		}
 	}
 }

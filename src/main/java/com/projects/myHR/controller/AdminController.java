@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -18,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.projects.myHR.dto.MyHRUserRequestDTO;
 import com.projects.myHR.dto.MyHRUserResponseDTO;
+import com.projects.myHR.dto.UpdateRoleRequestDTO;
+import com.projects.myHR.enums.MyHRRequestStatus;
 import com.projects.myHR.service.MyHRUserService;
 
 import jakarta.validation.Valid;
@@ -47,6 +51,16 @@ public class AdminController {
 	public ResponseEntity<Page<MyHRUserResponseDTO>> findAllUsers(@RequestParam(defaultValue = "0")int page, @RequestParam(defaultValue = "5") int size){
 		Page<MyHRUserResponseDTO> userList = userService.findAllUsers(page, size);
 		return ResponseEntity.ok(userList);
+	}
+	
+	@PutMapping("/updateRole")
+	public ResponseEntity<MyHRRequestStatus> updateRole(@RequestBody UpdateRoleRequestDTO reqDTO){
+		MyHRRequestStatus reqStatus = userService.updateRole(reqDTO);
+		if(reqStatus == MyHRRequestStatus.SUCCESS) {
+			return ResponseEntity.ok(reqStatus);
+		}else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(reqStatus);
+		}
 	}
 	
 }
