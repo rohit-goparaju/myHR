@@ -1,5 +1,7 @@
 package com.projects.myHR.controller;
 
+import java.io.IOException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,9 +10,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.projects.myHR.dto.ChangePasswordRequestDTO;
+import com.projects.myHR.dto.ChangeSecurityQuestionRequestDTO;
 import com.projects.myHR.dto.MyHRUserLoginRequestDTO;
 import com.projects.myHR.dto.MyHRUserLoginResponseDTO;
 import com.projects.myHR.dto.ResetPasswordRequestDTO;
@@ -81,6 +86,16 @@ public class HomeController {
 			return ResponseEntity.ok(resetStatus);
 		}else {			
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resetStatus);
+		}
+	}
+	
+	@PutMapping("/updateProfile")
+	public ResponseEntity<MyHRRequestStatus> updateProfile(@RequestPart("securityDetails") ChangeSecurityQuestionRequestDTO reqDTO, @RequestPart("profilePicture") MultipartFile profilePicture) throws IOException{
+		MyHRRequestStatus reqStatus = userService.updateProfile(reqDTO, profilePicture);
+		if(reqStatus == MyHRRequestStatus.SUCCESS) {
+			return ResponseEntity.ok(reqStatus);
+		}else {			
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(reqStatus);		
 		}
 	}
 }

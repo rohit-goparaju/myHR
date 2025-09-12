@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.projects.myHR.dto.ChangePasswordRequestDTO;
+import com.projects.myHR.dto.ChangeSecurityQuestionRequestDTO;
 import com.projects.myHR.dto.MyHRUserLoginRequestDTO;
 import com.projects.myHR.dto.MyHRUserLoginResponseDTO;
 import com.projects.myHR.dto.MyHRUserRequestDTO;
@@ -50,7 +51,7 @@ public class MyHRUserService {
 			user.setPassword(encoder.encode(userReqDTO.getPassword()));
 			user.setRole(userReqDTO.getRole());
 			user.setProfilePicture(profilePicture.getBytes());
-			user.setSecurityQuestion(userReqDTO.getSecurityQuestion().trim());
+			user.setSecurityQuestion(userReqDTO.getSecurityQuestion().trim().toLowerCase());
 			user.setSecurityAnswer(userReqDTO.getSecurityAnswer().trim().toLowerCase());
 
 			MyHRUser savedUser = repo.save(user);
@@ -144,6 +145,32 @@ public class MyHRUserService {
 			return MyHRRequestStatus.SUCCESS;
 		}
 		else {			
+			return MyHRRequestStatus.FAILED;
+		}
+	}
+
+	public MyHRRequestStatus updateProfile(ChangeSecurityQuestionRequestDTO reqDTO, MultipartFile profilePicture) throws IOException {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		boolean changed = false;
+		if(username != null) {
+			MyHRUser user = repo.findByUsername(username);
+			if(profilePicture != null && !profilePicture.isEmpty()) {
+				user.setProfilePicture(profilePicture.getBytes());
+				changed = true;
+			}
+			if(!user.getSecurityQuestion().equalsIgnoreCase(reqDTO.getSecurityQuestion().trim())) {
+				user.setSecurityQuestion(reqDTO.getSecurityQuestion().trim().toLowerCase());
+				changed = true;
+			}
+			if(!user.getSecurityAnswer().equalsIgnoreCase(reqDTO.getSecurityAnswer().trim())) {
+				user.setSecurityAnswer(reqDTO.getSecurityAnswer().trim().toLowerCase());
+				changed = true;
+			}
+			if(changed) {
+				repo.save(user);
+			}
+			return MyHRRequestStatus.SUCCESS;
+		}else {
 			return MyHRRequestStatus.FAILED;
 		}
 	}
